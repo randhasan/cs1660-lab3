@@ -1,18 +1,30 @@
-name: GitHub Actions Demo
+name: Deploy to GCP Artifact Registry
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: [push]
 jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-      - name: Check out repository code
-        uses: actions/checkout@v4
-      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
       - name: List files in the repository
+        run: ls ${{ github.workspace }}
+      - run: echo "Setting up GCP authentication..."
+      - name: Authenticate to GCP
+        id: auth
+        uses: google-github-actions/auth@v1
+        with:
+          workload_identity_provider: 'projects/665926523943/locations/global/workloadIdentityPools/lab3-pool/providers/my-repo'
+          service_account: 'github-actions-sa@upheld-welder-439421-m8.iam.gserviceaccount.com'
+      - run: echo "Successfully authenticated to GCP."
+      - name: Configure Docker for GCP Artifact Registry
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev
+      - run: echo "Docker is configured to use GCP Artifact Registry."
+      - name: Build Docker image
         run: |
-          ls ${{ github.workspace }}
-      - run: echo "🍏 This job's status is ${{ job.status }}."
+          echo "🔨 Building Docker image..."
+          docker build -t us-central1-docker.pkg.dev/upheld-welder-439421-m8/lab3-cs1660/my-app:latest .
+      - run: echo "Docker image built successfully."
+      - name: Push Docker image
+        run: |
+          echo "📤Pushing Docker image to Artifact Registry..."
+          docker push us-central1-docker.pkg.dev/upheld-welder-439421-m8/lab3-cs1660/my-app:latest
+      - run: echo "Docker image pushed successfully to Artifact Registry."
