@@ -22,10 +22,10 @@ jobs:
       - name: Build Docker image
         run: |
           echo "Building Docker image..."
-          docker build -t us-central1-docker.pkg.dev/upheld-welder-439421-m8/cs1660-lab3/my-app:latest .
+          docker build -t us-central1-docker.pkg.dev/upheld-welder-439421-m8/lab3-cs1660:latest ./cs1660-lab3
       - run: echo "Docker image built successfully."
       - name: Push Docker image
         run: |
           echo "Pushing Docker image to Artifact Registry..."
-          docker push us-central1-docker.pkg.dev/upheld-welder-439421-m8/cs1660-lab3/my-app:latest
+          docker push us-central1-docker.pkg.dev/upheld-welder-439421-m8/lab3-cs1660/my-app:latest
       - run: echo "Docker image pushed successfully to Artifact Registry."
