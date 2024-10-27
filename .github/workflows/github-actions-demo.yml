@@ -13,8 +13,7 @@ jobs:
         id: auth
         uses: google-github-actions/auth@v1
         with:
-          workload_identity_provider: 'projects/665926523943/locations/global/workloadIdentityPools/lab3-pool/providers/my-repo'
-          service_account: 'github-actions-sa@upheld-welder-439421-m8.iam.gserviceaccount.com'
+          credentials_json: ${{ secrets.GCP_SERVICEACC_KEY }}
       - run: echo "Successfully authenticated to GCP."
       - name: Configure Docker for GCP Artifact Registry
         run: gcloud auth configure-docker us-central1-docker.pkg.dev
