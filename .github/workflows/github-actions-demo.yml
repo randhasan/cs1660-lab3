@@ -21,6 +21,9 @@ jobs:
       - name: Configure Docker for GCP Artifact Registry
         run: gcloud auth configure-docker us-central1-docker.pkg.dev
       - run: echo "Docker is configured to use GCP Artifact Registry."
+      - name: List files in the repository
+        run: |
+          ls -la
       - name: Build Docker image
         run: |
           echo "Building Docker image..."
